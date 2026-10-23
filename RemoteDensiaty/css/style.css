@@ -1,0 +1,500 @@
+/* ==========================================================================
+   TreiWagon Remote —— 遥控 APP 样式
+   竖屏为主, 全屏无滚动. 两摇杆并排在下半屏, 两拇指同时够得到.
+   ========================================================================== */
+
+:root {
+    --bg:        #12141a;
+    --panel:     #1b1f27;
+    --panel-2:   #232833;
+    --line:      #2e3542;
+    --fg:        #e8eaed;
+    --fg-dim:    #8b93a1;
+    --accent:    #3ad07a;
+    --accent-dim:#1f7a48;
+    --danger:    #e5484d;
+    --warn:      #e0a33a;
+    --radius:    14px;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+                 "Helvetica Neue", "Microsoft YaHei", sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    overscroll-behavior: none;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: calc(8px + env(safe-area-inset-top)) 14px
+             calc(10px + env(safe-area-inset-bottom)) 14px;
+    gap: 10px;
+}
+
+/* ===================== 顶栏 ===================== */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 0 0 auto;
+}
+
+.brand {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    color: var(--fg);
+}
+
+.status {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--panel-2);
+    color: var(--fg-dim);
+    max-width: 55vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.status--ok      { background: var(--accent-dim); color: #d7ffe8; }
+.status--error   { background: #5a2426;           color: #ffd8d9; }
+.status--idle    { background: var(--panel-2);    color: var(--fg-dim); }
+.status--mock    { background: #3a2f14;           color: #ffe6a8; }
+
+/* ===================== 数值面板 ===================== */
+.telemetry {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    flex: 0 0 auto;
+}
+
+.tel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 8px 4px 7px;
+    text-align: center;
+}
+
+.tel-label {
+    display: block;
+    font-size: 11px;
+    color: var(--fg-dim);
+    margin-bottom: 3px;
+}
+
+.tel-value {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    line-height: 1.15;
+}
+
+.tel-value--sub { color: #9fc4ff; font-size: 17px; }
+
+/* ===================== 急停行 ===================== */
+.estop-row {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 10px;
+    flex: 0 0 auto;
+}
+
+.btn {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--fg);
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 13px 10px;
+    cursor: pointer;
+    transition: transform 0.06s ease, background 0.15s ease;
+}
+
+.btn:active { transform: scale(0.975); }
+
+.btn--estop {
+    background: var(--danger);
+    border-color: #ff6b70;
+    color: #fff;
+    letter-spacing: 3px;
+    font-size: 17px;
+}
+
+.btn--estop.is-on {
+    background: #7a1f22;
+    border-color: var(--danger);
+    animation: blink 0.9s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%, 100% { background: #7a1f22; }
+    50%      { background: #b02b2f; }
+}
+
+.btn--ghost {
+    background: transparent;
+    color: var(--fg-dim);
+    font-weight: 500;
+}
+
+.btn--ghost.is-on {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+    background: rgba(58, 208, 122, 0.08);
+}
+
+.btn--wide { grid-column: span 2; }
+
+/* ===================== 摇杆区 ===================== */
+/*  两种形态:
+ *    油门 .jk--v      垂直长条 —— 前后方向行程拉到接近整屏高,
+ *                     100 个等级摊开在三百多像素上, 每级 3px 左右, 手指分得出来
+ *    转向 .jk--round  圆形摇杆 —— 左右受手机宽度限制, 保持原样
+ */
+.sticks {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: stretch;        /* 撑满高度, 油门的竖条才能拉长 */
+    justify-content: space-around;
+    gap: 14px;
+    min-height: 0;
+}
+
+.stick-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-height: 0;
+}
+
+.stick-wrap--v     { flex: 0 0 auto; justify-content: center; }
+.stick-wrap--round { justify-content: center; }
+
+.jk {
+    position: relative;
+    touch-action: none;          /* 关键: 不让浏览器抢走手势 */
+    flex: 0 0 auto;
+}
+
+/* ---------- 油门: 垂直长条 ---------- */
+.jk--v {
+    flex: 1 1 auto;              /* 吃掉 .stick-wrap--v 里除标签外的全部高度 */
+    width: min(34vw, 130px);
+    min-height: 200px;
+    max-height: 480px;           /* 大屏手机上别拉得推不到底 */
+}
+
+.jk--v .jk-base {
+    border-radius: 999px;        /* 胶囊形滑轨 */
+}
+
+.jk--v .jk-knob {
+    width: 84%;
+    height: 58px;
+    border-radius: 999px;        /* 胶囊形把手 */
+}
+
+.jk--v .jk-axis--v {
+    top: 4%;
+    bottom: 4%;
+}
+
+/* ---------- 转向: 圆形 ---------- */
+.jk--round {
+    width: min(40vw, 170px);
+    height: min(40vw, 170px);
+}
+
+.jk--round .jk-base {
+    border-radius: 50%;
+}
+
+.jk--round .jk-knob {
+    width: 42%;
+    height: 42%;
+    border-radius: 50%;
+}
+
+/* ---------- 共用外观 ---------- */
+.jk-base {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 50% 42%, #232a36 0%, #171b22 68%, #12151a 100%);
+    border: 2px solid var(--line);
+    box-shadow: inset 0 3px 12px rgba(0, 0, 0, 0.55);
+}
+
+.jk-active .jk-base {
+    border-color: var(--accent-dim);
+    box-shadow: inset 0 3px 12px rgba(0, 0, 0, 0.55),
+                0 0 16px rgba(58, 208, 122, 0.22);
+}
+
+/* 轴线提示: 告诉用户这个杆只走哪一个方向 */
+.jk-axis {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.10);
+    border-radius: 2px;
+}
+
+.jk-axis--v {
+    left: 50%;
+    top: 9%;
+    bottom: 9%;
+    width: 2px;
+    transform: translateX(-50%);
+}
+
+.jk-axis--h {
+    top: 50%;
+    left: 9%;
+    right: 9%;
+    height: 2px;
+    transform: translateY(-50%);
+}
+
+.jk-knob {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at 38% 32%, #6f7d90 0%, #3a4351 62%, #262d38 100%);
+    border: 1px solid #55606f;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+    pointer-events: none;        /* 事件统一由 .jk 接 */
+}
+
+.jk-active .jk-knob {
+    background: radial-gradient(circle at 38% 32%, #79e6a8 0%, #2f9c63 62%, #1d6b43 100%);
+    border-color: #8ef0ba;
+}
+
+/* 松手回中动画 */
+.jk:not(.jk-active) .jk-knob {
+    transition: transform 0.12s ease-out;
+}
+
+.stick-label {
+    font-size: 12px;
+    color: var(--fg-dim);
+    letter-spacing: 1px;
+}
+
+/* ===================== 连接行 ===================== */
+.conn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    flex: 0 0 auto;
+}
+
+/* ===================== 设备列表 ===================== */
+.devlist {
+    flex: 0 0 auto;
+    max-height: 30vh;
+    overflow-y: auto;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dev {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 12px;
+    background: var(--panel-2);
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.dev:active { background: #2b3240; }
+
+.dev-rssi {
+    font-size: 12px;
+    color: var(--fg-dim);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ===================== MOCK 面板 ===================== */
+.mockpanel {
+    flex: 0 0 auto;
+    max-height: 22vh;
+    background: var(--panel);
+    border: 1px solid #4a3d18;
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow: hidden;
+}
+
+.mock-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #ffe6a8;
+}
+
+.mock-rate {
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+}
+
+.mock-log {
+    margin: 0;
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--fg-dim);
+    white-space: pre;
+    overflow: hidden;
+    flex: 1 1 auto;
+}
+
+/* ===================== 扫描浮层 ===================== */
+.scan-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.72);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+}
+
+.scan-panel {
+    width: 100%;
+    max-height: 72vh;
+    background: var(--panel);
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    border: 1px solid var(--line);
+    border-bottom: none;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: env(safe-area-inset-bottom);
+    animation: scanSlideUp 0.18s ease-out;
+}
+
+@keyframes scanSlideUp {
+    from { transform: translateY(24px); opacity: 0.6; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+.scan-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--line);
+    flex: 0 0 auto;
+}
+
+.scan-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--fg);
+}
+
+.scan-close {
+    background: none;
+    border: none;
+    color: var(--fg-dim);
+    font-size: 24px;
+    line-height: 1;
+    padding: 0 6px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.scan-close:active { color: var(--fg); }
+
+.scan-list {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 12px 14px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 120px;
+}
+
+.scan-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 14px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.scan-item:active { background: #2b3240; }
+
+.scan-name {
+    font-size: 15px;
+    color: var(--fg);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.scan-rssi {
+    font-size: 12px;
+    color: var(--fg-dim);
+    font-variant-numeric: tabular-nums;
+    flex: 0 0 auto;
+    margin-left: 10px;
+}
+
+.scan-empty {
+    text-align: center;
+    color: var(--fg-dim);
+    padding: 36px 10px;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+/* ===================== 工具类 ===================== */
+.hidden { display: none !important; }
+
+/* 横屏时把摇杆压扁一点, 保证按钮不被挤出屏幕 */
+@media (orientation: landscape) and (max-height: 520px) {
+    .jk { width: min(24vh, 150px); height: min(24vh, 150px); }
+    .telemetry { gap: 6px; }
+    .tel-value { font-size: 17px; }
+    .btn { padding: 9px 8px; font-size: 14px; }
+    #app { gap: 7px; }
+}

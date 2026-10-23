@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0"   stop-color="#20262f"/>
+      <stop offset="1"   stop-color="#0b0d11"/>
+    </linearGradient>
+
+    <linearGradient id="rail" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0"   stop-color="#161a21"/>
+      <stop offset="1"   stop-color="#272d38"/>
+    </linearGradient>
+
+    <linearGradient id="knob" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0"   stop-color="#7bf5b0"/>
+      <stop offset="0.5" stop-color="#3ad07a"/>
+      <stop offset="1"   stop-color="#1f8f52"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 满幅底色: 不留圆角、不留透明, 交给手机启动器自己裁形状 -->
+  <rect width="512" height="512" fill="url(#bg)"/>
+
+  <!-- ================= 左: 油门竖条 ================= -->
+  <rect x="80" y="128" width="96" height="256" rx="48"
+        fill="url(#rail)" stroke="#2e3542" stroke-width="6"/>
+  <!-- 把手偏上 = 前进方向 -->
+  <rect x="92" y="156" width="72" height="96" rx="36" fill="url(#knob)"/>
+  <!-- 把手高光 -->
+  <rect x="102" y="166" width="52" height="26" rx="13"
+        fill="#ffffff" fill-opacity="0.40"/>
+
+  <!-- ================= 右: 转向圆盘 ================= -->
+  <circle cx="344" cy="256" r="88"
+          fill="url(#rail)" stroke="#2e3542" stroke-width="6"/>
+  <!-- 十字刻度线, 暗示这是左右杆 -->
+  <rect x="270" y="252" width="148" height="8" rx="4"
+        fill="#ffffff" fill-opacity="0.06"/>
+  <!-- 把手偏右 = 右转方向 -->
+  <circle cx="366" cy="256" r="36" fill="url(#knob)"/>
+  <circle cx="376" cy="245" r="11"
+          fill="#ffffff" fill-opacity="0.48"/>
+</svg>

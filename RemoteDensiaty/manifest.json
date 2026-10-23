@@ -1,0 +1,56 @@
+{
+    "@platforms" : [ "android" ],
+    "id" : "H50C22D40",
+    "name" : "TreiWagon Remote",
+    "version" : {
+        "name" : "0.1",
+        "code" : 1
+    },
+    "description" : "TreiWagon 遥控小车 - 双摇杆差速遥控 (MSPM0G3507)",
+    "icons" : {
+        "72" : "icon.png"
+    },
+    "launch_path" : "index.html",
+    "developer" : {
+        "name" : "",
+        "email" : "",
+        "url" : ""
+    },
+    "permissions" : {
+        "Bluetooth" : {
+            "description" : "连接小车蓝牙串口模块"
+        },
+        "Storage" : {
+            "description" : "记住上次连接的设备"
+        },
+        "Console" : {
+            "description" : "调试日志"
+        }
+    },
+    "plus" : {
+        "splashscreen" : {
+            "autoclose" : true,
+            "waiting" : true
+        },
+        "popGesture" : "none",
+        "runmode" : "normal",
+        "screenOrientation" : [ "portrait-primary" ],
+        "distribute" : {
+            "google" : {
+                "packagename" : "com.treiwagon.remote",
+                "minSdkVersion" : 21,
+                "targetSdkVersion" : 30,
+                "abiFilters" : [ "armeabi-v7a", "arm64-v8a" ],
+                "permissions" : [
+                    "<uses-permission android:name=\"android.permission.BLUETOOTH\"/>",
+                    "<uses-permission android:name=\"android.permission.BLUETOOTH_ADMIN\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+                    "<uses-feature android:name=\"android.hardware.bluetooth_le\" android:required=\"true\"/>"
+                ],
+                "custompermissions" : false
+            }
+        }
+    }
+}

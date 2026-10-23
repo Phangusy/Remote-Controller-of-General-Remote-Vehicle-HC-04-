@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<title>TreiWagon Remote</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+    <!-- ===================== 顶栏 ===================== -->
+    <header class="topbar">
+        <div class="brand">TreiWagon Remote</div>
+        <div id="status" class="status status--idle">未连接</div>
+    </header>
+
+    <!-- ===================== 数值面板 ===================== -->
+    <section class="telemetry">
+        <div class="tel">
+            <span class="tel-label">油门</span>
+            <span id="val-t" class="tel-value">0</span>
+        </div>
+        <div class="tel">
+            <span class="tel-label">转向</span>
+            <span id="val-s" class="tel-value">0</span>
+        </div>
+        <div class="tel">
+            <span class="tel-label">左轮</span>
+            <span id="val-l" class="tel-value tel-value--sub">0</span>
+        </div>
+        <div class="tel">
+            <span class="tel-label">右轮</span>
+            <span id="val-r" class="tel-value tel-value--sub">0</span>
+        </div>
+    </section>
+
+    <!-- ===================== 急停 ===================== -->
+    <section class="estop-row">
+        <button id="btn-estop" class="btn btn--estop">急 停</button>
+        <button id="btn-hold" class="btn btn--ghost">直线保持：关</button>
+    </section>
+
+    <!-- ===================== 摇杆 ===================== -->
+    <section class="sticks">
+
+        <!-- 油门: 垂直长条, 行程拉满整个中间区.
+
+             ★ 上推 = 车往前, 这个直觉和改动之前完全一致 —— 不用管
+             底盘其实是倒着走的. 反向是在 js/app.js 的 physThrottle()
+             里做的, 摇杆本身没有翻转方向. -->
+        <div class="stick-wrap stick-wrap--v">
+            <div id="jk-throttle" class="jk jk--v">
+                <div class="jk-base"></div>
+                <div class="jk-axis jk-axis--v"></div>
+                <div class="jk-knob"></div>
+            </div>
+            <div class="stick-label">前进 / 后退</div>
+        </div>
+
+        <!-- 转向: 圆形摇杆, 保持原样 -->
+        <div class="stick-wrap stick-wrap--round">
+            <div id="jk-steer" class="jk jk--round">
+                <div class="jk-base"></div>
+                <div class="jk-axis jk-axis--h"></div>
+                <div class="jk-knob"></div>
+            </div>
+            <div class="stick-label">左右</div>
+        </div>
+
+    </section>
+
+    <!-- ===================== 连接 ===================== -->
+    <section class="conn-row">
+        <button id="btn-scan" class="btn btn--ghost">扫描设备</button>
+        <button id="btn-disconnect" class="btn btn--ghost">断开</button>
+    </section>
+
+    <!-- 扫描浮层（点"扫描设备"后弹出，参考 TreiBlue 的做法） -->
+    <div id="scan-overlay" class="scan-overlay hidden">
+        <div class="scan-panel">
+            <div class="scan-header">
+                <span id="scan-title" class="scan-title">蓝牙设备</span>
+                <button id="scan-close" class="scan-close">×</button>
+            </div>
+            <div id="scan-list" class="scan-list"></div>
+        </div>
+    </div>
+
+    <!-- MOCK 调试面板 -->
+    <section id="mockpanel" class="mockpanel hidden">
+        <div class="mock-head">
+            <span>MOCK 模式 · 不连真蓝牙</span>
+            <span id="mock-rate" class="mock-rate">0 Hz</span>
+        </div>
+        <pre id="mock-log" class="mock-log"></pre>
+    </section>
+
+</div>
+
+<script src="js/protocol.js"></script>
+<script src="js/joystick.js"></script>
+<script src="js/ble.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
